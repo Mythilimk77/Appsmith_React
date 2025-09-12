@@ -9,79 +9,92 @@ export const GanttContainer = styled.div`
   color: #fff;
 `;
 
+/* Left grid (task list) */
 export const TaskGrid = styled.div`
   flex: 0 0 250px;
   background: #1e1f22;
-  border-right: 1px solid #444;
+  border-right: 1px solid #333;
   overflow-y: auto;
 `;
 
+/* a row in the left grid */
 export const GridRow = styled.div<{ level: number }>`
   padding: 6px 8px;
   display: flex;
   align-items: center;
   cursor: pointer;
   padding-left: ${({ level }) => `${level * 16 + 8}px`};
-  border-bottom: 1px solid #333;
-
-  &:hover {
-    background: #2c3136;
-  }
+  border-bottom: 1px solid #222;
+  height: 28px;
+  box-sizing: border-box;
 `;
 
+/* Right side timeline container */
 export const Timeline = styled.div`
   flex: 1;
   overflow: auto;
   position: relative;
-  background: #2c2f33;
 `;
 
+/* The stacked header area (sticky) */
 export const TimelineHeader = styled.div`
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid #555;
+  border-bottom: 1px solid #444;
   background: #222;
   position: sticky;
   top: 0;
   z-index: 2;
 `;
 
+/* Row containing scale cells */
 export const ScaleRow = styled.div`
   display: flex;
 `;
 
+/* a single scale cell (day) */
 export const ScaleCell = styled.div<{ width: number }>`
   width: ${({ width }) => width}px;
   text-align: center;
   font-size: 12px;
-  border-left: 1px solid #555;
-  padding: 2px 0;
+  border-left: 1px solid #333;
+  padding: 4px 0;
+  box-sizing: border-box;
 `;
 
+/* timeline body that holds rows AND bars; it is positioned relative */
 export const TimelineBody = styled.div`
   position: relative;
+  min-height: 100%;
 `;
 
+/* each background row */
+export const TaskRow = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+  box-sizing: border-box;
+`;
+
+/* the bar itself */
 export const TaskBar = styled.div<{ left: number; width: number; color?: string }>`
   position: absolute;
-  height: 20px;
-  top: 4px;
   left: ${({ left }) => left}px;
   width: ${({ width }) => width}px;
+  height: 20px;
   background: ${({ color }) => color || "#4caf50"};
-  border-radius: 4px;
-  cursor: grab;
-
-  &:hover {
-    opacity: 0.9;
-  }
+  border-radius: 6px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  cursor: pointer;
+  user-select: none;
 `;
 
-export const TaskRow = styled.div`
-  height: 28px;
-  border-bottom: 1px solid #333;
-  position: relative;
-`;
 
 
 
