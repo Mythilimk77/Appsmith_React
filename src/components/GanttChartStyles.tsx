@@ -1,251 +1,189 @@
 import styled from "styled-components";
 
+/* Container */
 export const GanttContainer = styled.div`
   display: flex;
-  height: 600px;
   width: 100%;
-  font-family: Arial, sans-serif;
-  background: #2c2f33;
-  color: #fff;
-`;
-
-/* Left grid (task list) */
-export const TaskGrid = styled.div`
-  flex: 0 0 250px;
-  background: #1e1f22;
-  border-right: 1px solid #333;
-  overflow-y: auto;
-`;
-
-/* a row in the left grid */
-export const GridRow = styled.div<{ level: number }>`
-  padding: 6px 8px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding-left: ${({ level }) => `${level * 16 + 8}px`};
-  border-bottom: 1px solid #222;
-  height: 28px;
-  box-sizing: border-box;
-`;
-
-/* Right side timeline container */
-export const Timeline = styled.div`
-  flex: 1;
-  overflow: auto;
+  height: 720px;
+  background: #f7f8fa;
+  font-family: Inter, Roboto, Arial, sans-serif;
+  color: #222;
+  border-radius: 8px;
+  overflow: hidden;
   position: relative;
 `;
 
-/* The stacked header area (sticky) */
-export const TimelineHeader = styled.div`
+/* Left grid (task table) */
+export const LeftGrid = styled.div`
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  width: 420px;
+  background: white;
+  border-right: 1px solid #e6e9ee;
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid #444;
-  background: #222;
+  overflow-y: auto; /* Handles vertical scrolling for rows */
+`;
+
+/* header */
+export const GridHeader = styled.div`
+  display: flex;
+  align-items: center;
+  height: 56px;
+  padding: 0 12px;
+  border-bottom: 1px solid #eef1f5;
+  gap: 12px;
+  font-weight: 600;
+  color: #3b4752;
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background: white;
+`;
+
+/* columns */
+export const GridCol = styled.div<{ width: string }>`
+  flex: 0 0 ${p => p.width};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+/* rows container */
+export const GridBody = styled.div`
+  flex: 1;
+`;
+
+/* single row */
+export const GridRow = styled.div<{ selected?: boolean }>`
+  display: flex;
+  align-items: center;
+  height: 56px;
+  padding: 0 12px;
+  gap: 12px;
+  border-bottom: 1px solid #f1f3f6;
+  cursor: grab;
+  background: ${p => (p.selected ? "#f0f6ff" : "white")};
+  &:active {
+    cursor: grabbing;
+  }
+`;
+
+/* timeline area (right) */
+export const TimelineArea = styled.div`
+  flex: 1;
+  position: relative;
+  overflow: auto;
+  background: #30343a;
+`;
+
+/* header area of timeline (sticky) */
+export const TimelineHeader = styled.div`
   position: sticky;
   top: 0;
   z-index: 2;
+  background: #30343a;
+  border-bottom: 1px solid #e6e9ee;
+  display: flex;
+  height: 56px;
+  align-items: flex-end;
+  padding: 0;
 `;
 
-/* Row containing scale cells */
+/* day / hour scale container */
 export const ScaleRow = styled.div`
   display: flex;
+  align-items: flex-end;
+  height: 100%;
 `;
 
-/* a single scale cell (day) */
-export const ScaleCell = styled.div<{ width: number }>`
-  width: ${({ width }) => width}px;
+/* cell */
+export const ScaleCell = styled.div<{ w: number }>`
+  min-width: ${p => p.w}px;
+  flex-shrink: 0;
   text-align: center;
   font-size: 12px;
-  border-left: 1px solid #333;
-  padding: 4px 0;
+  color: #eee;
+  padding: 6px 4px;
   box-sizing: border-box;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
 `;
 
-/* timeline body that holds rows AND bars; it is positioned relative */
+/* body for timeline rows */
 export const TimelineBody = styled.div`
   position: relative;
-  min-height: 100%;
 `;
 
-/* each background row */
-export const TaskRow = styled.div`
+/* each track row (space for bar) */
+export const TrackRow = styled.div<{ top: number; rowHeight: number }>`
   position: absolute;
   left: 0;
   right: 0;
-  border-bottom: 1px solid rgba(255,255,255,0.02);
+  top: ${p => p.top}px;
+  height: ${p => p.rowHeight}px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
   box-sizing: border-box;
 `;
 
-/* the bar itself */
-export const TaskBar = styled.div<{ left: number; width: number; color?: string }>`
+/* bar container */
+export const Bar = styled.div<{ left: number; width: number; color?: string }>`
   position: absolute;
-  left: ${({ left }) => left}px;
-  width: ${({ width }) => width}px;
-  height: 20px;
-  background: ${({ color }) => color || "#4caf50"};
+  left: ${p => p.left}px;
+  width: ${p => p.width}px;
+  height: 36px;
+  background: ${p => p.color || "#1e90ff"};
   border-radius: 6px;
-  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
-  cursor: pointer;
+  color: white;
+  font-size: 13px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
   user-select: none;
+  cursor: grab;
+  padding: 0 12px;
+  overflow: hidden;
 `;
 
+/* usage fill: sits inside Bar, anchored left, narrower width */
+export const UsageFill = styled.div<{ usedWidth: number }>`
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: ${p => p.usedWidth}px;
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 6px 0 0 6px;
+  pointer-events: none;
+`;
 
+/* little handle for dragging horizontally (right) */
+export const Handle = styled.div`
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 2px;
+`;
 
+/* small helper for left gutter space alignment with header */
+export const LeftGutter = styled.div`
+  width: 12px;
+  flex: 0 0 12px;
+  z-index: 5;
+`;
 
-
-
-
-
-// import styled from "styled-components";
-// export const Wrapper = styled.div`
-//   width: 100%;
-//   height: 100%;
-//   display: flex;
-//   flex-direction: column;
-//   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-//   user-select: none;
-// `;
-
-// export const Toolbar = styled.div`
-//   display:flex;
-//   gap:8px;
-//   padding:8px;
-//   border-bottom:1px solid #eee;
-//   align-items:center;
-// `;
-
-// export const ToolButton = styled.button`
-//   padding:6px 10px;
-//   border-radius:6px;
-//   border:1px solid #ddd;
-//   background:white;
-//   cursor:pointer;
-// `;
-
-// export const Body = styled.div`
-//   display:flex;
-//   flex:1 1 auto;
-//   overflow:hidden;
-// `;
-
-// export const Grid = styled.div<{ width: number }>`
-//   width: ${p => p.width}px;
-//   min-width: ${p => p.width}px;
-//   border-right:1px solid #eee;
-//   overflow:auto;
-// `;
-
-// export const GridHeader = styled.div`
-//   height: ${p => (p as any).height || 40}px;
-//   display:flex;
-//   align-items:center;
-//   padding:8px;
-//   border-bottom:1px solid #eee;
-//   background:#fafafa;
-// ` as any;
-
-// export const GridRow = styled.div<{ height: number; selected?: boolean }>`
-//   height:${p => p.height}px;
-//   display:flex;
-//   align-items:center;
-//   padding:6px 8px;
-//   border-bottom:1px solid #f1f1f1;
-//   background:${p => (p.selected ? '#f0f8ff' : 'transparent')};
-//   box-sizing:border-box;
-// `;
-
-// export const NameCell = styled.div`
-//   flex:1 1 auto;
-//   overflow:hidden;
-//   text-overflow:ellipsis;
-//   white-space:nowrap;
-// `;
-
-// export const TimelineWrapper = styled.div`
-//   flex:1 1 auto;
-//   position:relative;
-//   overflow:auto;
-// `;
-
-// export const TimelineGrid = styled.div<{ width: number }>`
-//   width:${p => p.width}px;
-//   position:relative;
-//   min-height:100%;
-// `;
-
-// export const TimeHeader = styled.div`
-//   position:sticky;
-//   top:0;
-//   display:flex;
-//   gap:0;
-//   background:linear-gradient(180deg,#fff,#fafafa);
-//   z-index:2;
-//   border-bottom:1px solid #eee;
-// `;
-
-// export const TimeCell = styled.div<{ left:number; width:number; isWeekend?:boolean; isHoliday?:boolean }>`
-//   position:absolute;
-//   left:${p => p.left}px;
-//   width:${p => p.width}px;
-//   height:48px;
-//   display:flex;
-//   align-items:center;
-//   justify-content:center;
-//   font-size:12px;
-//   box-sizing:border-box;
-//   border-right:1px dashed rgba(0,0,0,0.04);
-//   background:${p => (p.isHoliday ? '#fff0f0' : p.isWeekend ? '#fbfbfb' : 'transparent')};
-// `;
-
-// export const TaskBar = styled.div<{ top:number; left:number; width:number; height:number; color?:string }>`
-//   position:absolute;
-//   left:${p => p.left}px;
-//   top:${p => p.top}px;
-//   width:${p => p.width}px;
-//   height:${p => p.height}px;
-//   border-radius:4px;
-//   display:flex;
-//   align-items:center;
-//   padding:4px;
-//   box-sizing:border-box;
-//   cursor:pointer;
-//   box-shadow: 0 1px 1px rgba(0,0,0,0.06);
-//   background:${p => p.color || '#4aa3ff'};
-//   color:white;
-//   font-size:12px;
-// `;
-
-// export const ProgressFill = styled.div<{ progress:number }>`
-//   position:absolute;
-//   left:0;
-//   top:0;
-//   bottom:0;
-//   width:${p => p.progress}%;
-//   opacity:0.18;
-// `;
-
-// export const ContextMenu = styled.ul<{ x:number; y:number }>`
-//   position:fixed;
-//   left:${p => p.x}px;
-//   top:${p => p.y}px;
-//   list-style:none;
-//   padding:6px 0;
-//   margin:0;
-//   background:white;
-//   border-radius:6px;
-//   box-shadow:0 6px 18px rgba(0,0,0,0.12);
-//   z-index:9999;
-// `;
-
-// export const MenuItem = styled.li`
-//   padding:6px 14px;
-//   cursor:pointer;
-//   white-space:nowrap;
-//   &:hover{background:#f6f6f6}
-// `;
+/* container for timeline & scale */
+export const TimelineInner = styled.div<{ totalWidth: number }>`
+  position: relative;
+  min-width: ${p => p.totalWidth}px;
+  min-height: 100%;
+`;
